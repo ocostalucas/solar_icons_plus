@@ -100,7 +100,7 @@ class _GalleryPageState extends State<GalleryPage> {
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 150,
-                mainAxisExtent: 112,
+                mainAxisExtent: 124,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
               ),
