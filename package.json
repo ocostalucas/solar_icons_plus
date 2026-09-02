@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "generate": "dart run scripts/generate.dart"
+  },
+  "devDependencies": {
+    "@iconify-json/solar": "^1.2.10",
+    "fantasticon": "^3.0.0"
+  }
+}
