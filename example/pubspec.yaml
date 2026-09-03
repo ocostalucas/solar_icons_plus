@@ -1,6 +1,6 @@
 name: solar_icons_plus_example
-description: Searchable gallery for solar_icons_plus.
-publish_to: none
+description: Example app demonstrating the solar_icons_plus package.
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   solar_icons_plus:
     path: ../
+  flutter_colorpicker: ^1.1.0
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:

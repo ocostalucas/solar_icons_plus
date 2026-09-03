@@ -24,15 +24,104 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Solar Icons Plus">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" href="favicon.ico" />
 
   <title>Solar Icons Plus Gallery</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Simple loading screen for Flutter web */
+    #flutter-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: #ffffff;
+      z-index: 99999;
+      transition: opacity 300ms ease;
+    }
+    #flutter-loader .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 12px;
+      object-fit: contain;
+    }
+    #loader-progress {
+      width: 260px;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    #loader-progress .bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #8b7cf7, #6c5ce7);
+      transition: width 300ms linear;
+    }
+    #loader-text {
+      margin-top: 12px;
+      font-family: Roboto, Arial, sans-serif;
+      color: #666;
+      font-size: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      #flutter-loader {
+        background: #0b0b0b;
+        color: #ddd;
+      }
+      #loader-progress {
+        background: #222;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Simple HTML loader shown while Flutter web initializes -->
+  <div id="flutter-loader" aria-hidden="false">
+    <img class="logo" src="icons/icon-192x192.png" alt="logo" />
+    <div id="loader-progress"><div class="bar" id="loader-bar"></div></div>
+    <div id="loader-text">Loading gallery...</div>
+  </div>
+
+  <script>
+    (function () {
+      var bar = document.getElementById("loader-bar");
+      var width = 0;
+      var id = setInterval(function () {
+        width += Math.random() * 12;
+        if (width > 95) width = 95;
+        bar.style.width = Math.round(width) + "%";
+      }, 300);
+
+      window.hideLoadingScreen = function () {
+        clearInterval(id);
+        try {
+          bar.style.width = "100%";
+        } catch (e) {}
+        var el = document.getElementById("flutter-loader");
+        if (!el) return;
+        el.style.opacity = "0";
+        el.setAttribute("aria-hidden", "true");
+        setTimeout(function () {
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        }, 420);
+      };
+
+      // Safety timeout in case the app never signals ready
+      setTimeout(function () {
+        if (document.getElementById("flutter-loader")) {
+          window.hideLoadingScreen();
+        }
+      }, 10000);
+    })();
+  </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
