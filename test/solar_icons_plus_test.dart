@@ -37,6 +37,116 @@ void main() {
       expect(SolarIcon.toHexPublic(const Color(0xFF6C5CE7)), '#6c5ce7');
     });
 
+    test('uses the primary color everywhere when no secondary is set', () {
+      final svg =
+          '<g fill="{color}"><path opacity=".5" d="a"/><path d="b"/></g>';
+      final result = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        null,
+      );
+      expect(
+        result,
+        '<g fill="#6c5ce7"><path opacity=".5" d="a"/><path d="b"/></g>',
+      );
+      expect(result, isNot(contains('{color}')));
+    });
+
+    test('applies the secondary color to opacity elements only', () {
+      final svg =
+          '<g fill="{color}"><path opacity=".5" d="a"/><path d="b"/></g>';
+      final result = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        const Color(0xFF111111),
+      );
+      expect(
+        result,
+        '<g fill="#6c5ce7"><path fill="#111111" opacity=".5" d="a"/><path d="b"/></g>',
+      );
+    });
+
+    test('applies the secondary color to stroke-based duotone elements', () {
+      final svg = '<g fill="none" stroke="{color}">'
+          '<circle cx="12" cy="12" r="10" opacity=".5"/>'
+          '<path d="m1 1"/></g>';
+      final result = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        const Color(0xFF999999),
+      );
+      expect(
+        result,
+        '<g fill="none" stroke="#6c5ce7">'
+        '<circle stroke="#999999" cx="12" cy="12" r="10" opacity=".5"/>'
+        '<path d="m1 1"/></g>',
+      );
+    });
+
+    test('replaces every stroke-width when a value is provided', () {
+      final svg = '<g stroke-width="1.5">'
+          '<path d="a"/><circle stroke-width="1.5" r="2"/></g>';
+      final result = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        null,
+        strokeWidth: 3,
+      );
+      expect(
+        result,
+        '<g stroke-width="3">'
+        '<path d="a"/><circle stroke-width="3" r="2"/></g>',
+      );
+    });
+
+    test('clamps stroke width to the 0.5..3 range', () {
+      final svg = '<g stroke-width="1.5"><path d="a"/></g>';
+      final low = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        null,
+        strokeWidth: 0.1,
+      );
+      final high = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        null,
+        strokeWidth: 10,
+      );
+      expect(low, contains('stroke-width="0.5"'));
+      expect(high, contains('stroke-width="3"'));
+      expect(SolarIcon.minStrokeWidth, 0.5);
+      expect(SolarIcon.maxStrokeWidth, 3.0);
+    });
+
+    test('keeps the original stroke-width when none is provided', () {
+      final svg = '<g stroke-width="1.5"><path d="a"/></g>';
+      final result = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        null,
+      );
+      expect(result, contains('stroke-width="1.5"'));
+    });
+
+    test('works with secondary color and stroke width together', () {
+      final svg = '<g fill="none" stroke="{color}" stroke-width="1.5">'
+          '<circle r="10" opacity=".5"/>'
+          '<path d="m1 1"/></g>';
+      final result = SolarIcon.applyColors(
+        svg,
+        const Color(0xFF6C5CE7),
+        const Color(0xFF999999),
+        strokeWidth: 2.5,
+      );
+      expect(
+        result,
+        '<g fill="none" stroke="#6c5ce7" stroke-width="2.5">'
+        '<circle stroke="#999999" r="10" opacity=".5"/>'
+        '<path d="m1 1"/></g>',
+      );
+    });
+
     testWidgets('renders a duotone SVG at the requested size', (tester) async {
       await tester.pumpWidget(
         const Directionality(

@@ -54,6 +54,34 @@ SolarIcon(SolarIcons.home2Linear)
 SolarIcon(SolarIcons.userRoundedBroken)
 ```
 
+For duotone styles (`BoldDuotone`, `LineDuotone`), you can tint the background
+layer with `secondaryColor`. Elements rendered with an `opacity` attribute (the
+duotone background) use this color; the foreground keeps `color`. When
+`secondaryColor` is `null`, both layers share `color` and the native opacity
+fade is kept:
+
+```dart
+SolarIcon(
+  SolarIcons.home2BoldDuotone,
+  size: 48,
+  color: const Color(0xFF6C5CE7),
+  secondaryColor: const Color(0xFFE0D9FF),
+)
+```
+
+For stroke-based styles (`Linear`, `Broken`, `Line Duotone`) you can adjust the
+line thickness with `strokeWidth`, clamped to a `0.5`–`3` range. When omitted,
+the original template width (`1.5`) is kept:
+
+```dart
+SolarIcon(
+  SolarIcons.home2Linear,
+  size: 48,
+  color: const Color(0xFF6C5CE7),
+  strokeWidth: 3,
+)
+```
+
 You can also import the classes for one style:
 
 ```dart
