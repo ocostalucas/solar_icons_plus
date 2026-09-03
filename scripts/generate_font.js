@@ -2,6 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 const { generateFonts } = require("fantasticon");
+const { convertFile } = require("./evenodd_to_nonzero");
 
 const inputDir = process.argv[2];
 const outputDir = process.argv[3];
@@ -13,6 +14,14 @@ if (!inputDir || !outputDir || !fontName) {
 }
 
 fs.mkdirSync(outputDir, { recursive: true });
+
+// Convert Solar evenodd paths to nonzero so that designed cut-outs (holes)
+// keep opposite winding and render correctly in the font.
+for (const file of fs.readdirSync(inputDir)) {
+  if (file.toLowerCase().endsWith(".svg")) {
+    convertFile(path.join(inputDir, file));
+  }
+}
 
 const config = {
   inputDir: inputDir.split(path.sep).join("/"),
