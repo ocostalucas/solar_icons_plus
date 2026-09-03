@@ -321,7 +321,7 @@ class _GalleryPageState extends State<GalleryPage>
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 16, top: 4),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 4),
                 child: Row(
                   children: [
                     const Text('Stroke', style: TextStyle(fontSize: 12)),
